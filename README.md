@@ -10,4 +10,4 @@ Api contara com:
 
 ✅Usuarios:
 
-  criação de novo usuario, Login do usuario, Exibir informações do usuario, Atualizar informações do usuario e exlusão do usuario.
+  criação de novo usuario, Login do usuario, Exibir informações do usuario, Atualizar informações do usuario e exclusão do usuario.
