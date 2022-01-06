@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 const Jwt = require('jsonwebtoken');
 const User = require('../models/User');
+
+const CurrentAccount = require('../models/CurrentAccount');
+const CreditCard = require('../models/CreditCard');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -22,6 +25,7 @@ module.exports = {
               {email,id:user.id},
               process.env.JWT_SECRET_KEY
             );
+            
             res.status(201);
             res.json({id:user.id,token})
           }else{
@@ -43,7 +47,7 @@ module.exports = {
     }
     
   },
-  //cadastro
+  //cadastro usuario
   signup: async(req,res)=>{
     if(req.body.name && req.body.email && req.body.password && req.body.cpf !== '' ){
 
@@ -68,15 +72,23 @@ module.exports = {
             email:data.email,
             password:passwordHash
           });
+          await CurrentAccount.create({
+            initialvalue : '1.773,21',
+            iduser : user.id
+          });
+          await CreditCard.create({
+            limit:'2.700,00',
+            iduser : user.id
+          });
           const token = Jwt.sign(
-            {email:data.email,id:user.id},
+            {email:user.email,id:user.id},
             process.env.JWT_SECRET_KEY
             );
           res.status(201);
           res.json({id:user.id,token});
         }catch(error){
           res.status(200);
-          res.json({error:'Ocorreu um erro tente mais tarde...'})
+          res.json({error})
         }
       }
     }else{
@@ -127,7 +139,7 @@ module.exports = {
       }
     }
   },
-
+  // informações do usuario
   infoUser: async(req,res)=>{
     let { id } = req.params;
     const user = await User.findOne({where:{id}});
@@ -150,8 +162,12 @@ module.exports = {
     let { id } = req.params;
     let user = await User.findOne({where:{id}});
     if(user){
+      const account =  await CurrentAccount.findOne({where:{iduser:user.id}});
+      const creditCard = await CreditCard.findOne({where:{iduser:user.id}})
       try{
         user.destroy();
+        account.destroy();
+        creditCard.destroy();
         res.status(201);
         res.json({});
       }catch(error){
