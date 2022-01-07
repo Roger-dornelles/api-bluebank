@@ -1,7 +1,8 @@
 const CreditCard = require('../models/CreditCard');
+const CreditCardInvoice = require('../models/CreditCardInvoice');
 
 module.exports = {
-  //exibir saldo
+  //exibir saldo cartão
   viewCredit: async (req,res)=>{
     try{
       let { id } = req.params;
@@ -15,7 +16,55 @@ module.exports = {
       }
     }catch(error){
       res.status(404);
-      res.json({error:'Ocorreu um erro tente mais tarde...'})
+      res.json({error:'Ocorreu um erro tente mais tarde...'});
+    }
+  },
+  // exibir fatura
+  invoice: async (req,res)=>{
+    let {id} = req.params;
+    let invoice = await CreditCardInvoice.findAll({where:{iduser:id}});
+    try{
+      if(!invoice){
+        res.status(200);
+        res.json({error:'Não há lançamentos...'});
+      }else{
+        res.status(201);
+        res.json({invoice});
+      }
+
+    }catch(error){
+      res.status(404);
+      res.json({error:'Ocorreu um erro tente mais tarde...'});
+    }
+    
+  },
+  //adicionar despesas
+  cardExpenses: async (req,res)=>{
+    let {id} = req.params;
+    let { description, value, parcel } = req.body;
+    try{
+      if(description && value !== ''){
+        let parcelInvoice = 0;
+        if(parcel){
+          parcelInvoice = parcel;
+        }
+        let invoices = await CreditCardInvoice.create({
+          iduser:id,
+          description,
+          value,
+          parcel:parcelInvoice
+        });
+        res.status(201);
+        res.json({});
+      }else{
+        res.status(200);
+        res.json({error:'Preencha todos os campos...'});
+      }
+
+    }catch(error){
+      console.log(error);
+      res.status(404);
+      res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
   }
 }

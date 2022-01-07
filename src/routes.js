@@ -24,12 +24,16 @@ router.delete('/user/delete/:id',Auth.private,UserController.deleteUser);
 
 // CurrentAccount
 // exibir saldo
-router.post('/account/user/:id', Auth.private, CurrentAccountController.viewAccount);
+router.get('/account/user/:id', Auth.private, CurrentAccountController.viewAccount);
 //atualizar saldo
 router.put('/account/user/:id',Auth.private, CurrentAccountController.updateAccount);
 
 // CreditCard
-//exibir saldo
-router.get('/creditCard/user/:id', Auth.private, CreditCardController.viewCredit)
+//exibir limite cartão
+router.get('/creditCard/user/:id', Auth.private, CreditCardController.viewCredit);
+// exibir fatura
+router.get('/creditCard/invoice/:id', Auth.private, CreditCardController.invoice);
+// adicionar despesas
+router.post('/creditCard/expenses/:id', Auth.private, CreditCardController.cardExpenses);
 
 module.exports = router;

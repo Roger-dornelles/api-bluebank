@@ -16,8 +16,8 @@ module.exports = {
           );
           success = true;
         }catch(error){
-          res.status(403);
-          res.json({error:'Não Autorizado'})
+          res.status(401);
+          res.json({error:'Não Autorizado'});
         }
       }
     }
@@ -25,7 +25,7 @@ module.exports = {
     if(success){
       next()
     }else{
-      res.status(403);
+      res.status(401);
       res.json({error:'Não Autorizado'});
     }
   }
