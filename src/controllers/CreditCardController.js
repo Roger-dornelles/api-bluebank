@@ -1,9 +1,13 @@
 const CreditCard = require('../models/CreditCard');
 const CreditCardInvoice = require('../models/CreditCardInvoice');
 
+// helpers (Formatação do dia, mes, ano);
+const FormatDate = require('../helpers/Date');
+
 module.exports = {
   //exibir saldo cartão
   viewCredit: async (req,res)=>{
+  
     try{
       let { id } = req.params;
       let account = await CreditCard.findOne({where:{iduser:id}});
@@ -40,6 +44,8 @@ module.exports = {
   },
   //adicionar despesas
   cardExpenses: async (req,res)=>{
+    let {dateFormat,monthFormat} = FormatDate();
+
     let {id} = req.params;
     let { description, value, parcel } = req.body;
     try{
@@ -48,11 +54,13 @@ module.exports = {
         if(parcel){
           parcelInvoice = parcel;
         }
-        let invoices = await CreditCardInvoice.create({
+        await CreditCardInvoice.create({
           iduser:id,
           description,
           value,
-          parcel:parcelInvoice
+          parcel:parcelInvoice,
+          date: dateFormat,
+          month: monthFormat
         });
         res.status(201);
         res.json({});

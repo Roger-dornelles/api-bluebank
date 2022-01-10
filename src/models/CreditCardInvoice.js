@@ -21,6 +21,14 @@ const CreditCardInvoice = sequelize.define('CreditCardInvoice',{
   },
   parcel: {
     type:DataTypes.INTEGER
+  },
+  date:{
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  month:{
+    type:DataTypes.STRING,
+    allowNull: false
   }
 },{
   tableName: 'creditcardinvoice',
