@@ -17,7 +17,7 @@ const CreditCardInvoice = sequelize.define('CreditCardInvoice',{
   },
   value:{
     allowNull: false,
-    type:DataTypes.INTEGER
+    type:DataTypes.DECIMAL(10, 2),
   },
   parcel: {
     type:DataTypes.INTEGER

@@ -1,8 +1,10 @@
 const CreditCard = require('../models/CreditCard');
 const CreditCardInvoice = require('../models/CreditCardInvoice');
+const {mask} = require('remask');
 
 // helpers (Formatação do dia, mes, ano);
 const FormatDate = require('../helpers/Date');
+
 
 module.exports = {
   //exibir saldo cartão
@@ -23,12 +25,23 @@ module.exports = {
       res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
   },
-  // exibir fatura
-  invoice: async (req,res)=>{
+  // exibir faturas
+  invoices: async (req,res)=>{
     let {id} = req.params;
-    let invoice = await CreditCardInvoice.findAll({where:{iduser:id}});
+    let monthBody = req.body.month;
+    let invoice = await CreditCardInvoice.findAll({where:{
+      iduser:id,
+      month:monthBody
+    }
+  },{
+order:[
+  ['DESC','date']]
+  }
+  );
+
+
     try{
-      if(!invoice){
+      if(invoice.length === 0){
         res.status(200);
         res.json({error:'Não há lançamentos...'});
       }else{
@@ -54,16 +67,55 @@ module.exports = {
         if(parcel){
           parcelInvoice = parcel;
         }
-        await CreditCardInvoice.create({
-          iduser:id,
-          description,
-          value,
-          parcel:parcelInvoice,
-          date: dateFormat,
-          month: monthFormat
-        });
-        res.status(201);
-        res.json({});
+    // ---------- formatação de valor  ---------
+        let values = 0;
+        if(value.length <= 3){
+          res.status(200);
+          res.json({error:'Valor Invalido'})
+        };
+
+        if(value.length === 4){
+          const patterns = ['9,99']
+          values  = mask(value,patterns)
+        };
+
+        if(value.length === 5){
+          const patterns = ['99,99']
+          values = mask(value,patterns)
+        };
+
+        if(value.length === 6){
+          const patterns = ['999,99']
+          values = mask(value,patterns)
+        };
+
+        if(value.length === 8 ){
+          const patterns = ['9.999,99']
+          values = mask(value,patterns)
+        };
+
+        if(value.length === 9 ){
+          const patterns = ['99.999,99']
+          values = mask(value,patterns)
+        };
+
+        if(value.length === 10 ){
+          const patterns = ['999.999,99']
+          values = mask(value,patterns)
+        };
+        //-------------------------------
+        if(values !== 0){
+          await CreditCardInvoice.create({
+            iduser:id,
+            description,
+            value: values,
+            parcel:parcelInvoice,
+            date: dateFormat,
+            month: monthFormat
+          });
+          res.status(201);
+          res.json({});
+        }
       }else{
         res.status(200);
         res.json({error:'Preencha todos os campos...'});

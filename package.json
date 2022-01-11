@@ -19,6 +19,7 @@
     "nodemon": "^2.0.15",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
+    "remask": "^0.1.0-alpha.5",
     "sequelize": "^6.12.0"
   }
 }

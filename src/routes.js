@@ -31,8 +31,8 @@ router.put('/account/user/:id',Auth.private, CurrentAccountController.updateAcco
 // CreditCard
 //exibir limite cartão
 router.get('/creditCard/user/:id', Auth.private, CreditCardController.viewCredit);
-// exibir fatura
-router.get('/creditCard/invoice/:id', Auth.private, CreditCardController.invoice);
+// exibir compras
+router.get('/creditCard/invoices/:id', Auth.private, CreditCardController.invoices);
 // adicionar despesas
 router.post('/creditCard/expenses/:id', Auth.private, CreditCardController.cardExpenses);
 
