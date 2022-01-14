@@ -4,6 +4,8 @@ const {mask} = require('remask');
 
 // helpers (Formatação do dia, mes, ano);
 const FormatDate = require('../helpers/Date');
+// formatação de valores
+const ValueFormated = require('../helpers/ValueFormated');
 
 
 module.exports = {
@@ -28,10 +30,10 @@ module.exports = {
   // exibir faturas
   invoices: async (req,res)=>{
     let {id} = req.params;
-    let monthBody = req.body.month;
+    let month = req.body.month;
     let invoice = await CreditCardInvoice.findAll({where:{
       iduser:id,
-      month:monthBody
+      month
     }
   },{
 order:[
@@ -39,15 +41,28 @@ order:[
   }
   );
 
+  try{
+    if(invoice.length === 0){
+      res.status(200);
+      res.json({error:'Não há lançamentos...'});
+    }else{
+      let invoiceValue = 0;
+      if(invoice.length > 0){
 
-    try{
-      if(invoice.length === 0){
-        res.status(200);
-        res.json({error:'Não há lançamentos...'});
-      }else{
-        res.status(201);
-        res.json({invoice});
+        let invoiceArray = [];
+        for(let i in invoice){
+          let arrayValues = parseFloat(invoice[i].value.replace('.','').replace(',',''))
+          invoiceArray.push(arrayValues);
+        }
+  
+        let newTotal = invoiceArray.reduce(function(total, numero){
+          return total + numero;
+        });
+        invoiceValue = ValueFormated(newTotal.toString());
       }
+        res.status(201);
+        res.json({invoice,invoiceValue});
+    }
 
     }catch(error){
       res.status(404);
