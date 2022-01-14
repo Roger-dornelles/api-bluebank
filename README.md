@@ -18,4 +18,4 @@ Api contara com:
 
 ✅Cartao de credito
 
-  Criação de um cartao de credito com limite ficticio ao criar usuario, exibir o limite do cartao
+  Criação de um cartao de credito com limite ficticio ao criar usuario, exibir o limite do cartao e adicionar dispesas
