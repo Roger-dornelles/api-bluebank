@@ -1,11 +1,12 @@
 const CreditCard = require('../models/CreditCard');
 const CreditCardInvoice = require('../models/CreditCardInvoice');
-const {mask} = require('remask');
+const User = require('../models/User');
 
 // helpers (Formatação do dia, mes, ano);
 const FormatDate = require('../helpers/Date');
 // formatação de valores
 const ValueFormated = require('../helpers/ValueFormated');
+const PriceFormated = require('../helpers/PriceFormated');
 
 
 module.exports = {
@@ -77,67 +78,40 @@ order:[
     let {id} = req.params;
     let { description, value, parcel } = req.body;
     try{
-      if(description && value !== ''){
-        let parcelInvoice = 0;
-        if(parcel){
-          parcelInvoice = parcel;
-        }
-    // ---------- formatação de valor  ---------
-        let values = 0;
-        if(value.length <= 3){
-          res.status(200);
-          res.json({error:'Valor Invalido'})
-        };
+      const user = await User.findOne({where:{id}});
+      if(user){
 
-        if(value.length === 4){
-          const patterns = ['9,99']
-          values  = mask(value,patterns)
-        };
+        if(description && value !== ''){
+          let parcelInvoice = 0;
+          if(parcel){
+            parcelInvoice = parcel;
+          }
+          let newValue = 0;
+          newValue = PriceFormated(value.toString());
 
-        if(value.length === 5){
-          const patterns = ['99,99']
-          values = mask(value,patterns)
-        };
-
-        if(value.length === 6){
-          const patterns = ['999,99']
-          values = mask(value,patterns)
-        };
-
-        if(value.length === 8 ){
-          const patterns = ['9.999,99']
-          values = mask(value,patterns)
-        };
-
-        if(value.length === 9 ){
-          const patterns = ['99.999,99']
-          values = mask(value,patterns)
-        };
-
-        if(value.length === 10 ){
-          const patterns = ['999.999,99']
-          values = mask(value,patterns)
-        };
-        //-------------------------------
-        if(values !== 0){
-          await CreditCardInvoice.create({
-            iduser:id,
-            description,
-            value: values,
-            parcel:parcelInvoice,
-            date: dateFormat,
-            month: monthFormat
-          });
-          res.status(201);
-          res.json({});
-        }
+              if(newValue !== 0){
+                await CreditCardInvoice.create({
+                  iduser:id,
+                  description,
+                  value: newValue,
+                  parcel:parcelInvoice,
+                  date: dateFormat,
+                  month: monthFormat
+                });
+                res.status(201);
+                res.json({});
+              }
+            }else{
+              res.status(200);
+              res.json({error:'Preencha todos os campos...'});
+            }
       }else{
-        res.status(200);
-        res.json({error:'Preencha todos os campos...'});
+        res.status(404);
+        res.json({error:'Usuario Inexistente'});
       }
 
     }catch(error){
-      console.log(error);
+      console.log(error)
       res.status(404);
       res.json({error:'Ocorreu um erro tente mais tarde...'});
     }

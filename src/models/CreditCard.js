@@ -8,7 +8,7 @@ const CreditCard = sequelize.define('CreditCard',{
     type:DataTypes.INTEGER
   },
   limit:{
-    type:DataTypes.STRING,
+    type:DataTypes.DECIMAL,
   },
   iduser:{
     allowNull: false,

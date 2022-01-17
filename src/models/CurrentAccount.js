@@ -11,7 +11,7 @@ const CurrentAccount = sequelize.define('CurrentAccount', {
     type: DataTypes.STRING,
   },
   iduser:{
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false
   },
 
