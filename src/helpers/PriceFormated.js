@@ -1,7 +1,6 @@
 const {mask} = require('remask');
 
 const PriceFormated = (value) => {
-    console.log(value.length)
     let values = 0;
 
     if(value.length === 4){

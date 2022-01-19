@@ -31,14 +31,15 @@ module.exports = {
   // exibir faturas
   invoices: async (req,res)=>{
     let {id} = req.params;
-    let month = req.body.month;
+    let {month,year} = req.body;
     let invoice = await CreditCardInvoice.findAll({where:{
       iduser:id,
-      month
+      month,
+      year
     }
   },{
 order:[
-  ['DESC','date']]
+  ['DESC','date',]]
   }
   );
 
@@ -56,8 +57,8 @@ order:[
           invoiceArray.push(arrayValues);
         }
   
-        let newTotal = invoiceArray.reduce(function(total, numero){
-          return total + numero;
+        let newTotal = invoiceArray.reduce(function(value, numero){
+          return value + numero;
         });
         invoiceValue = ValueFormated(newTotal.toString());
       }
@@ -73,47 +74,98 @@ order:[
   },
   //adicionar despesas
   cardExpenses: async (req,res)=>{
-    let {dateFormat,monthFormat} = FormatDate();
+    let {dateFormat,monthFormat,year} = FormatDate();
 
     let {id} = req.params;
     let { description, value, parcel } = req.body;
     try{
+      let cardLimit = await CreditCard.findOne({where:{iduser:id}});
       const user = await User.findOne({where:{id}});
       if(user){
 
-        if(description && value !== ''){
-          let parcelInvoice = 0;
-          if(parcel){
-            parcelInvoice = parcel;
-          }
-          let newValue = 0;
-          newValue = PriceFormated(value.toString());
-
-              if(newValue !== 0){
-                await CreditCardInvoice.create({
-                  iduser:id,
-                  description,
-                  value: newValue,
-                  parcel:parcelInvoice,
-                  date: dateFormat,
-                  month: monthFormat
-                });
-                res.status(201);
-                res.json({});
-              }
-            }else{
-              res.status(200);
-              res.json({error:'Preencha todos os campos...'});
+        if(cardLimit.limit >= value){
+          // descontar do limite do cartao e formatar novo valor
+          let newLimitFormat = parseInt(cardLimit.limit.replace('.','').replace(',',''));
+          let newFormatValue = parseInt(value.replace('.','').replace(',',''));
+          let newLimit = (newLimitFormat - newFormatValue);
+          newLimit = ValueFormated(newLimit.toString());
+          //---------------------------------------------------------------
+          if(description && value !== ''){
+            let parcelInvoice = 0;
+            if(parcel){
+              parcelInvoice = parcel;
             }
+            // formatar valor da compra
+            let newValue = 0;
+            newValue = PriceFormated(value.toString());
+            
+            // dividir valor total da compra pelo numero de parcelas
+            let newParcelFormated = parseInt(parcelInvoice);
+            let newValueFormated = parseInt(newValue.replace('.','').replace(',',''));
+            let newDivision = '';
+            let divisionValue = '';
+            if(newParcelFormated >= 1){
+              divisionValue = Math.floor(newValueFormated / newParcelFormated);
+              newDivision = divisionValue.toString().replace('.','');
+            }
+            let newFormat = ValueFormated(newDivision.toString());
+            //-----------------------------------------------------------
+
+            if(newValue !== 0){
+              await CreditCardInvoice.create({
+                iduser:id,
+                description,
+                value: newValue,
+                parcel:parcelInvoice,
+                date: dateFormat,
+                month: monthFormat,
+                installmentvalue:newFormat,
+                year
+              });
+              // atualizar novo limite disponivel
+              cardLimit.limit = newLimit;
+              await cardLimit.save()
+              res.status(201);
+              res.json({});
+                }
+              }else{
+                res.status(200);
+                res.json({error:'Preencha todos os campos...'});
+              }
+        }else{
+          res.status(200);
+          res.json({error:'Limite Indisponivel...'});
+        }
+
       }else{
         res.status(404);
-        res.json({error:'Usuario Inexistente'});
+        res.json({error:'Usuario não encontrado...'});
       }
 
     }catch(error){
-      console.log(error)
+      res.status(404);
+      res.json({error:'Ocorreu um erro tente mais tarde...',});
+    }
+  },
+
+  // atualizar fatura pagamento
+  updateInvoice: async(req,res) => {
+    let { id } = req.params;
+    //let { situation } = req.body;
+    const user = await User.findOne({where:{id}});
+    try{
+      if(user){
+        res.status(201);
+        res.json('Atualizado com sucesso...');
+      }else{
+        res.status(200);
+        res.json({error:"Usuario não encontrado..."});
+      }
+
+    }catch(error){
       res.status(404);
       res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
+
   }
 }
