@@ -4,6 +4,7 @@ const User = require('../models/User');
 
 // helpers (Formatação do dia, mes, ano);
 const FormatDate = require('../helpers/Date');
+const DateFormated = require('../helpers/FormatDate');
 // formatação de valores
 const ValueFormated = require('../helpers/ValueFormated');
 const PriceFormated = require('../helpers/PriceFormated');
@@ -74,7 +75,7 @@ order:[
   },
   //adicionar despesas
   cardExpenses: async (req,res)=>{
-    let {dateFormat,monthFormat,year} = FormatDate();
+    let {dateFormat,monthFormat,year,month} = FormatDate();
 
     let {id} = req.params;
     let { description, value, parcel } = req.body;
@@ -108,30 +109,56 @@ order:[
               divisionValue = Math.floor(newValueFormated / newParcelFormated);
               newDivision = divisionValue.toString().replace('.','');
             }
-            let newFormat = ValueFormated(newDivision.toString());
+            let newFormatValue = ValueFormated(newDivision.toString());
             //-----------------------------------------------------------
 
             if(newValue !== 0){
-              await CreditCardInvoice.create({
-                iduser:id,
-                description,
-                value: newValue,
-                parcel:parcelInvoice,
-                date: dateFormat,
-                month: monthFormat,
-                installmentvalue:newFormat,
-                year
-              });
-              // atualizar novo limite disponivel
+              if(parseInt(parcelInvoice) === 0 || parseInt(parcelInvoice) === 1){
+                parcelInvoice = '0';
+                await CreditCardInvoice.create({
+                  iduser:id,
+                  description,
+                  value: newValue,
+                  parcel:parcelInvoice,
+                  date: dateFormat,
+                  month: monthFormat,
+                  installmentvalue:newFormatValue,
+                  year
+                });
+              }else{
+                // criar novas faturas referente ao numero de parcelas
+
+                let newParcelInvoice = parseInt(parcelInvoice);
+                for(let i = 0; i < newParcelInvoice; i++){
+                  let newMonth = (month + i);
+                  let formatDate = DateFormated(newMonth);
+
+                  await CreditCardInvoice.create({
+                    iduser:id,
+                    description,
+                    value: newValue,
+                    parcel:parcelInvoice,
+                    date: dateFormat,
+                    month: formatDate,
+                    installmentvalue:newFormatValue,
+                    year
+                  });
+
+                }
+                //-----------------------------------------------------
+              }
+              // atualizar limite disponivel cartao de credito
               cardLimit.limit = newLimit;
-              await cardLimit.save()
+              await cardLimit.save();
+
               res.status(201);
               res.json({});
-                }
-              }else{
-                res.status(200);
-                res.json({error:'Preencha todos os campos...'});
-              }
+
+            }
+          }else{
+              res.status(200);
+              res.json({error:'Preencha todos os campos...'});
+          }
         }else{
           res.status(200);
           res.json({error:'Limite Indisponivel...'});
@@ -144,19 +171,32 @@ order:[
 
     }catch(error){
       res.status(404);
-      res.json({error:'Ocorreu um erro tente mais tarde...',});
+      res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
   },
 
   // atualizar fatura pagamento
   updateInvoice: async(req,res) => {
     let { id } = req.params;
-    //let { situation } = req.body;
     const user = await User.findOne({where:{id}});
     try{
       if(user){
-        res.status(201);
-        res.json('Atualizado com sucesso...');
+        let { situation,month } = req.body;
+        let searchMonth = CreditCardInvoice.findOne({where:{month}});
+        if(searchMonth){
+          if(situation){
+            searchMonth.situation = situation;
+            user.save();
+            res.status(201);
+            res.json('Atualizado com sucesso...');
+          }else{
+            res.status(200);
+            res.json({});
+          }
+        }else{
+          res.status(200);
+          res.json({error:'Não há lançamentos...'});
+        }
       }else{
         res.status(200);
         res.json({error:"Usuario não encontrado..."});

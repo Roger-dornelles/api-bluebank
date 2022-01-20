@@ -46,7 +46,7 @@ const FormatDate = () => {
     break;
 
   }
-  return {dateFormat,monthFormat,year};
+  return {dateFormat,monthFormat,year,month};
 };
 module.exports = FormatDate;
 
