@@ -127,11 +127,17 @@ order:[
                 });
               }else{
                 // criar novas faturas referente ao numero de parcelas
-
                 let newParcelInvoice = parseInt(parcelInvoice);
                 for(let i = 0; i < newParcelInvoice; i++){
                   let newMonth = (month + i);
                   let formatDate = DateFormated(newMonth);
+                  // formatar ano 
+                  let date = new Date();
+                  let newYear = date.getFullYear();
+                  if(newMonth > 12){
+                    newYear += 1;
+                    
+                  }
 
                   await CreditCardInvoice.create({
                     iduser:id,
@@ -141,7 +147,7 @@ order:[
                     date: dateFormat,
                     month: formatDate,
                     installmentvalue:newFormatValue,
-                    year
+                    year: newYear
                   });
 
                 }
@@ -170,6 +176,7 @@ order:[
       }
 
     }catch(error){
+      console.log(error);
       res.status(404);
       res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
@@ -177,7 +184,8 @@ order:[
 
   // atualizar fatura pagamento
   updateInvoice: async(req,res) => {
-    let { id } = req.params;
+
+    let id  = req.params;
     const user = await User.findOne({where:{id}});
     try{
       if(user){
