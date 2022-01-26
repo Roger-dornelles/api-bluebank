@@ -33,7 +33,7 @@ router.put('/account/user/:id',Auth.private, CurrentAccountController.updateAcco
 router.get('/creditCard/user/:id', Auth.private, CreditCardController.viewCredit);
 //atualizar limite cartao
 //router.put('/creditCard/user/:id', Auth.private, CreditCardController.updateCredit)
-// exibir compras
+// exibir faturas
 router.get('/creditCard/invoices/:id', Auth.private, CreditCardController.invoices);
 // adicionar despesas
 router.post('/creditCard/expenses/:id', Auth.private, CreditCardController.cardExpenses);

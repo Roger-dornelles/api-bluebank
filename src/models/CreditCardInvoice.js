@@ -33,9 +33,6 @@ const CreditCardInvoice = sequelize.define('CreditCardInvoice',{
   installmentvalue:{
     type:DataTypes.STRING,
   },
-  situation:{
-    type:DataTypes.STRING,
-  },
   year:{
     type:DataTypes.STRING
   }

@@ -1,6 +1,7 @@
 const CreditCard = require('../models/CreditCard');
 const CreditCardInvoice = require('../models/CreditCardInvoice');
 const User = require('../models/User');
+const DescriptionInvoiceValue = require('../models/DescriptionInvoiceValue');
 
 // helpers (Formatação do dia, mes, ano);
 const FormatDate = require('../helpers/Date');
@@ -33,41 +34,59 @@ module.exports = {
   invoices: async (req,res)=>{
     let {id} = req.params;
     let {month,year} = req.body;
-    let invoice = await CreditCardInvoice.findAll({where:{
-      iduser:id,
-      month,
-      year
-    }
-  },{
-order:[
-  ['DESC','date',]]
-  }
-  );
+    
+    try{
+      let invoice = await CreditCardInvoice.findAll({where:{
+          iduser:id,
+          month,
+          year
+        }
+      },{
+      order:[
+        ['DESC','date',]]
+        }
+    );
 
-  try{
     if(invoice.length === 0){
       res.status(200);
       res.json({error:'Não há lançamentos...'});
     }else{
       let invoiceValue = 0;
-      if(invoice.length > 0){
-
+      if(invoice.length >= 1){
+        //formatar valores, exibir valor total gasto no mes
         let invoiceArray = [];
         for(let i in invoice){
-          let arrayValues = parseFloat(invoice[i].value.replace('.','').replace(',',''))
+          let arrayValues = parseFloat(invoice[i].installmentvalue.replace('.','').replace(',',''))
           invoiceArray.push(arrayValues);
         }
-  
-        let newTotal = invoiceArray.reduce(function(value, numero){
-          return value + numero;
+        
+        let newTotal = invoiceArray.reduce(function(value, item){
+          return value + item;
         });
         invoiceValue = ValueFormated(newTotal.toString());
       }
+      let descriptionInvoiceValue = await DescriptionInvoiceValue.findOne({where:{iduser:id,month,year}});
+      if(!descriptionInvoiceValue){
+
+        await DescriptionInvoiceValue.create({
+          iduser:id,
+          month: month,
+          year: year,
+          situation: 'Em Aberto',
+          value:invoiceValue
+        })
+      }else{
+        let descriptionInvoice = await DescriptionInvoiceValue.findOne({where:{iduser:id,month,year}});
+        descriptionInvoice.value = invoiceValue;
+        descriptionInvoice.save();
+      }
+      
         res.status(201);
         res.json({invoice,invoiceValue});
     }
 
     }catch(error){
+      console.log('ERROR ',error);
       res.status(404);
       res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
@@ -84,7 +103,7 @@ order:[
       const user = await User.findOne({where:{id}});
       if(user){
 
-        if(cardLimit.limit >= value){
+        if(cardLimit.limit.replace('.','').replace(',','') >= value.replace('.','').replace(',','')){
           // descontar do limite do cartao e formatar novo valor
           let newLimitFormat = parseInt(cardLimit.limit.replace('.','').replace(',',''));
           let newFormatValue = parseInt(value.replace('.','').replace(',',''));
@@ -105,11 +124,14 @@ order:[
             let newValueFormated = parseInt(newValue.replace('.','').replace(',',''));
             let newDivision = '';
             let divisionValue = '';
-            if(newParcelFormated >= 1){
+            if(newParcelFormated >= 2){
               divisionValue = Math.floor(newValueFormated / newParcelFormated);
               newDivision = divisionValue.toString().replace('.','');
+            }else{
+              newDivision = newValue.replace('.','').replace(',','')
             }
             let newFormatValue = ValueFormated(newDivision.toString());
+      
             //-----------------------------------------------------------
 
             if(newValue !== 0){
@@ -156,17 +178,16 @@ order:[
               // atualizar limite disponivel cartao de credito
               cardLimit.limit = newLimit;
               await cardLimit.save();
-
+              
               res.status(201);
               res.json({});
-
             }
           }else{
               res.status(200);
               res.json({error:'Preencha todos os campos...'});
           }
         }else{
-          res.status(200);
+          res.status(200); 
           res.json({error:'Limite Indisponivel...'});
         }
 
@@ -176,7 +197,6 @@ order:[
       }
 
     }catch(error){
-      console.log(error);
       res.status(404);
       res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
@@ -185,22 +205,23 @@ order:[
   // atualizar fatura pagamento
   updateInvoice: async(req,res) => {
 
-    let id  = req.params;
-    const user = await User.findOne({where:{id}});
+    let {id}  = req.params;
+    let { situation,month,year } = req.body;
     try{
+      const user = await User.findOne({where:{id}});
       if(user){
-        let { situation,month } = req.body;
-        let searchMonth = CreditCardInvoice.findOne({where:{month}});
-        if(searchMonth){
-          if(situation){
-            searchMonth.situation = situation;
-            user.save();
-            res.status(201);
-            res.json('Atualizado com sucesso...');
-          }else{
-            res.status(200);
-            res.json({});
+        let searchInvoice = await CreditCardInvoice.findAll({where:{iduser:id,month,year}});
+        
+        if(searchInvoice){
+          let descriptionInvoiceValue = await DescriptionInvoiceValue.findOne({where:{iduser:id,month,year}});
+          if(descriptionInvoiceValue){
+            descriptionInvoiceValue.situation = situation;
+            descriptionInvoiceValue.save();
           }
+          res.status(201);
+          res.json('Pagamento Efetuado');
+
+
         }else{
           res.status(200);
           res.json({error:'Não há lançamentos...'});
@@ -211,6 +232,7 @@ order:[
       }
 
     }catch(error){
+      console.log('Error ',error)
       res.status(404);
       res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
