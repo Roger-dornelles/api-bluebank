@@ -65,6 +65,8 @@ module.exports = {
         });
         invoiceValue = ValueFormated(newTotal.toString());
       }
+      //-------------------------------------------------------------
+      //criar fatura do mes se não existir com valor total da fatura
       let descriptionInvoiceValue = await DescriptionInvoiceValue.findOne({where:{iduser:id,month,year}});
       if(!descriptionInvoiceValue){
 
@@ -86,7 +88,7 @@ module.exports = {
     }
 
     }catch(error){
-      console.log('ERROR ',error);
+
       res.status(404);
       res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
@@ -217,10 +219,20 @@ module.exports = {
           if(descriptionInvoiceValue){
             descriptionInvoiceValue.situation = situation;
             descriptionInvoiceValue.save();
+
+            //adicionar valor fatura ao limite cartão
+            if(descriptionInvoiceValue.situation === "Pagamento Efetuado"){
+              let cardLimit = await CreditCard.findOne({where:{iduser:id}});
+              if(cardLimit){
+                let newValues = parseInt(cardLimit.limit.replace('.','').replace(',','')) + parseInt(descriptionInvoiceValue.value.replace('.','').replace(',',''));
+                cardLimit.limit = ValueFormated(newValues.toString());
+                cardLimit.save();
+              }
+            }
+            //--------------------------------------------------------
           }
           res.status(201);
           res.json('Pagamento Efetuado');
-
 
         }else{
           res.status(200);
@@ -232,7 +244,6 @@ module.exports = {
       }
 
     }catch(error){
-      console.log('Error ',error)
       res.status(404);
       res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
