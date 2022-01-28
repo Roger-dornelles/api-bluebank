@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
+// controllers
 const UserController = require('./controllers/UserController');
 const CurrentAccountController = require('./controllers/CurrentAccountController');
 const CreditCardController = require('./controllers/CreditCardController');
+const PixController = require('./controllers/PixController');
 
 //validator
 const AuthValidator = require('./validator/AuthValidator');
+
 // middleware
 const Auth = require('./middlewares/Auth');
 
@@ -38,6 +41,9 @@ router.get('/creditCard/invoices/:id', Auth.private, CreditCardController.invoic
 // adicionar despesas
 router.post('/creditCard/expenses/:id', Auth.private, CreditCardController.cardExpenses);
 // atualizar fatura cartao
-router.put('/creditCard/expenses/:id',Auth.private, CreditCardController.updateInvoice)
+router.put('/creditCard/expenses/:id',Auth.private, CreditCardController.updateInvoice);
+
+//Pix
+router.post('/pix/transfer/:id', Auth.private, PixController.transferValue)
 
 module.exports = router;

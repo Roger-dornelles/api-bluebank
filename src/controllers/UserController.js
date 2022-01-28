@@ -1,11 +1,13 @@
 const bcrypt = require('bcryptjs');
 const Jwt = require('jsonwebtoken');
-const User = require('../models/User');
-
-const CurrentAccount = require('../models/CurrentAccount');
-const CreditCard = require('../models/CreditCard');
 const dotenv = require('dotenv');
 dotenv.config();
+
+//models
+const User = require('../models/User');
+const CurrentAccount = require('../models/CurrentAccount');
+const CreditCard = require('../models/CreditCard');
+const CreditCardInvoice = require('../models/CreditCardInvoice');
 
 //validar dados de cadastro
 const {validationResult,matchedData } = require('express-validator');
@@ -160,23 +162,27 @@ module.exports = {
   //excluir usuario
   deleteUser: async(req,res)=>{
     let { id } = req.params;
-    let user = await User.findOne({where:{id}});
-    if(user){
-      const account =  await CurrentAccount.findOne({where:{iduser:user.id}});
-      const creditCard = await CreditCard.findOne({where:{iduser:user.id}})
-      try{
-        user.destroy();
-        account.destroy();
-        creditCard.destroy();
-        res.status(201);
-        res.json({});
-      }catch(error){
+    
+    try{
+      let user = await User.findOne({where:{id}});
+      if(user){
+        const account =  await CurrentAccount.findOne({where:{iduser:user.id}});
+        const creditCard = await CreditCard.findOne({where:{iduser:user.id}});
+        const creditCardInvoice = await CreditCardInvoice.findOne({where:{iduser:user.id}});
+
+        await account.destroy();
+        await creditCard.destroy();
+        await creditCardInvoice.destroy();
+        await user.destroy();
         res.status(200);
-        res.json({error:'Ocorreu um erro tente mais tarde...'});
+        res.json({});
+      }else{
+        res.status(200);
+        res.json({error:'Usuario não encontrado...'});
       }
-    }else{
-      res.status(200);
-      res.json({error:'Usuario não encontrado...'})
+    }catch(error){
+      res.status(404);
+      res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
   }
 }

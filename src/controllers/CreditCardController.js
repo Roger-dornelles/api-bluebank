@@ -1,3 +1,4 @@
+//models
 const CreditCard = require('../models/CreditCard');
 const CreditCardInvoice = require('../models/CreditCardInvoice');
 const User = require('../models/User');
@@ -6,7 +7,7 @@ const DescriptionInvoiceValue = require('../models/DescriptionInvoiceValue');
 // helpers (Formatação do dia, mes, ano);
 const FormatDate = require('../helpers/Date');
 const DateFormated = require('../helpers/FormatDate');
-// formatação de valores
+//formatação de valores
 const ValueFormated = require('../helpers/ValueFormated');
 const PriceFormated = require('../helpers/PriceFormated');
 
