@@ -24,7 +24,7 @@ Api contara com:
   
 ✅Pix
 
-  criação de rota par tranferencia de valores e pagamento de boletos.
+  Criação de rota para tranferencia de valores e pagamento de boletos.
 
 ✅Tranferencia
 
