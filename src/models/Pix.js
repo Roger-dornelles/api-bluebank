@@ -19,6 +19,10 @@ const Pix = sequelize.define('Pix',{
         type:DataTypes.STRING,
         allowNull: false
     },
+    description:{
+        type:DataTypes.STRING,
+        allowNull: false
+    },
     month: {
         type:DataTypes.STRING,
         allowNull: false

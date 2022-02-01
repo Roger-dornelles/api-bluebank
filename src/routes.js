@@ -44,6 +44,9 @@ router.post('/creditCard/expenses/:id', Auth.private, CreditCardController.cardE
 router.put('/creditCard/expenses/:id',Auth.private, CreditCardController.updateInvoice);
 
 //Pix
+//Tranferencia de valor
 router.post('/pix/transfer/:id', Auth.private, PixController.transferValue)
+// pagamentos boleto
+router.post('/pix/pagament/:id', Auth.private, PixController.pagamentSlip)
 
 module.exports = router;

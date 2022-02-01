@@ -13,7 +13,7 @@ module.exports = {
     // transferencia de valor pix
     transferValue: async (req,res)=>{
         let { id } = req.params;
-        let { value, pixdestination } = req.body;
+        let { value, pixdestination, description } = req.body;
         let {dateFormat,year,month} = FormatDate();
 
         try{
@@ -23,26 +23,34 @@ module.exports = {
                 let accountBalanceFormat = parseInt(accountBalance.initialvalue.replace('.','').replace(',',''));
                 let valueFormat = parseInt(value.replace('.','').replace(',',''))
                 if(accountBalanceFormat >= valueFormat){
-                    if(pixdestination !== ''){
+                    if(pixdestination && description){
                         month = DateFormated(month);
                         accountBalanceFormat = (accountBalanceFormat - valueFormat);
                         value = PriceFormated(value.toString());
                         accountBalanceFormat = ValueFormated(accountBalanceFormat.toString());
-                        await Pix.create({
-                            iduser: user.id,
-                            value,
-                            pixdestination,
-                            month,
-                            year,
-                            date: dateFormat
-                        });
-                        accountBalance.initialvalue = accountBalanceFormat;
-                        accountBalance.save();
-                        res.status(201);
-                        res.json('transferencia realizada com sucesso.');
+
+                        if(description === "transferencia"){
+
+                            await Pix.create({
+                                iduser: user.id,
+                                value,
+                                pixdestination,
+                                month,
+                                description,
+                                year,
+                                date: dateFormat
+                            });
+                            accountBalance.initialvalue = accountBalanceFormat;
+                            accountBalance.save();
+                            res.status(201);
+                            res.json('transferencia realizada com sucesso.');
+                        }else{
+                            res.status(200);
+                            res.json({error:'Operação não realizada.'});
+                        }
                     }else{
                         res.status(200);
-                        res.json({error:'Preencher Pix de destino.'});
+                        res.json({error:'Preencher todos campos.'});
                     }
                 }else{
                     res.status(201);
@@ -55,7 +63,62 @@ module.exports = {
             }
 
         }catch(error){
-            console.log('ERROR ',error);
+            res.status(404);
+            res.json({error:'Ocorreu um erro tente mais tarde...'})
+        }
+    },
+    //pagamento boleto
+    pagamentSlip: async (req,res)=>{
+        let {dateFormat,year,month} = FormatDate();
+        let { id } = req.params;
+        let { value, pixdestination, description } = req.body;
+        try{
+            let user = await User.findOne({where:{id}}) ;
+            if(user){
+                let currentAccount = await CurrentAccount.findOne({where:{iduser:user.id}});
+                if(currentAccount){
+                    if(value){
+
+                        let currentAccountFormat = parseInt(currentAccount.initialvalue.replace('.','').replace(',',''));
+                        let valueFormat = parseInt(value.replace('.','').replace(',',''));
+    
+                        if(currentAccountFormat >= valueFormat){
+                            let newValue = 0;
+                            currentAccountFormat = (currentAccountFormat - valueFormat);
+                            newValue = ValueFormated(currentAccountFormat.toString());
+                            month = DateFormated(month);
+                            if(pixdestination && description === 'boleto'){
+                                value = PriceFormated(value);
+                                await Pix.create({
+                                    iduser: user.id,
+                                    description,
+                                    pixdestination,
+                                    value,
+                                    date: dateFormat,
+                                    year,
+                                    month
+                                });
+                                currentAccount.initialvalue = newValue;
+                                await currentAccount.save();
+                                res.status(201);
+                                res.json('Pagamento Efetuado');
+                            
+                            }else{
+                                res.status(200);
+                                res.json({error:'Preencha todos os campos...'});
+                            }
+                        }
+
+                    }else{
+                        res.status(200);
+                        res.json({error:'Valor invalido...'});
+                    }
+                }
+            }else{
+                res.json(200);
+                res.json({error:'Usuario não encontrado...'});
+            }
+        }catch(error){
             res.status(404);
             res.json({error:'Ocorreu um erro tente mais tarde...'})
         }
