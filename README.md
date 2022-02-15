@@ -1,5 +1,7 @@
 Api-bluebank
 
+## Instalação
+
 EM DESENVOLVIMENTO 🚨🚨🚨
 
 Tecnologias usadas:
