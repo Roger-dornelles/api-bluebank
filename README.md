@@ -1,6 +1,5 @@
 Api-bluebank
 
-## Instalação
 
 EM DESENVOLVIMENTO 🚨🚨🚨
 
