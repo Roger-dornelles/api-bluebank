@@ -8,6 +8,7 @@ const User = require('../models/User');
 const CurrentAccount = require('../models/CurrentAccount');
 const CreditCard = require('../models/CreditCard');
 const CreditCardInvoice = require('../models/CreditCardInvoice');
+const Loan = require('../models/Loan');
 
 //validar dados de cadastro
 const {validationResult,matchedData } = require('express-validator');
@@ -41,7 +42,7 @@ module.exports = {
 
       }catch(error){
         res.status(503);
-        res.json({error:"Ocorreu um erro tente novamente mais tarde..."})
+        res.json({error:"Ocorreu um erro tente novamente mais tarde..."});
       }
     }else{
       res.status(201);
@@ -81,6 +82,10 @@ module.exports = {
           await CreditCard.create({
             limit:'2.700,00',
             iduser : user.id
+          });
+          await Loan.create({
+            iduser: user.id,
+            value:'8.000,00'
           });
           const token = Jwt.sign(
             {email:user.email,id:user.id},
