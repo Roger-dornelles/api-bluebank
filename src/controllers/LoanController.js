@@ -1,7 +1,9 @@
+//models 
 const Loan = require('../models/Loan');
 const User = require('../models/User');
 const CreditCardInvoice = require('../models/CreditCardInvoice');
 
+// helpers
 // formatação de valores
 const ValueFormated = require('../helpers/ValueFormated');
 
@@ -98,11 +100,11 @@ module.exports = {
                             }
                         }else{
                             res.status(200);
-                            res.json({error:'Numero de parcelas indisponivel.'})
+                            res.json({error:'Numero de parcelas indisponivel.'});
                         }
                     }else{
                         res.status(200);
-                        res.json({error:'Valor Indisponivel.'})
+                        res.json({error:'Valor Indisponivel.'});
                     }
                 }else{
                     res.status(200);
@@ -115,9 +117,32 @@ module.exports = {
             }
         }catch(error){
             res.status(404);
-            console.log('ERROR ',error)
             res.json({error:'Ocorreu um erro tente mais tarde...'});
         }
 
+    },
+    //exibir valor disponivel Emprestimo
+    getLimit: async(req,res)=>{
+        let { id } = req.params
+        try{
+            let user = await User.findOne({where:{id}});
+
+            if(user){
+                let limit = await Loan.findOne({where:{iduser:user.id}});
+                if(limit){
+                    res.status(201);
+                    res.json(limit.value);
+                }else{
+                    res.status(200);
+                    res.json({error:'Empréstimo indisponivel no momento.'});
+                }
+            }else{
+                res.status(200);
+                res.json({error:'Usuario não encontrado...'});
+            }
+        }catch(error){
+            res.status(404);
+            res.json({error:'Ocorreu um erro tente mais tarde...'});
+        }
     }
 }

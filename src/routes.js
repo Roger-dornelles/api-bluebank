@@ -53,5 +53,7 @@ router.post('/pix/pagament/:id', Auth.private, PixController.pagamentSlip);
 //Loan
 // contratar emprestimo
 router.post('/loan/:id', Auth.private, LoanController.loanContract);
+//
+router.get('/loan/limit/:id', Auth.private,LoanController.getLimit)
 
 module.exports = router;
