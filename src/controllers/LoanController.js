@@ -144,5 +144,9 @@ module.exports = {
             res.status(404);
             res.json({error:'Ocorreu um erro tente mais tarde...'});
         }
+    },
+    // efetuar pagamento/ adicionar valor pago ao valor total disponivel para novo emprestimo
+    loanPayment: async (req,res)=>{
+        
     }
 }

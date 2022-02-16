@@ -3,6 +3,7 @@ const CreditCard = require('../models/CreditCard');
 const CreditCardInvoice = require('../models/CreditCardInvoice');
 const User = require('../models/User');
 const DescriptionInvoiceValue = require('../models/DescriptionInvoiceValue');
+const Loan = require('../models/Loan');
 
 // helpers (Formatação do dia, mes, ano);
 const FormatDate = require('../helpers/Date');
@@ -231,6 +232,27 @@ module.exports = {
               }
             }
             //--------------------------------------------------------
+
+            // adicionar valor do emprestimo pago ao valor total para novo emprestimo
+            for(let i in searchInvoice){
+              let loanArray = [];
+              if(searchInvoice[i].description === 'emprestimo'){
+                loanArray.push(parseInt(searchInvoice[i].installmentvalue.replace('.','').replace(',','')));
+                let sum = 0;
+                for(let i = 0; i < loanArray.length; i++){
+                  sum += loanArray[i];
+                };
+                let loan = await Loan.findOne({where:{iduser:user.id}});
+                if(loan){
+                  let loanValue = parseInt(loan.value.replace('.','').replace(',',''));
+                  loanValue += sum;
+                  loan.value = ValueFormated(loanValue.toString());
+                  await loan.save();
+                };
+              };
+            };
+
+            //--------------------------------------------------------------------------------
           }
           res.status(201);
           res.json('Pagamento Efetuado');

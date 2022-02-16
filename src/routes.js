@@ -45,7 +45,7 @@ router.post('/creditCard/expenses/:id', Auth.private, CreditCardController.cardE
 router.put('/creditCard/expenses/:id',Auth.private, CreditCardController.updateInvoice);
 
 //Pix
-//Tranferencia de valor
+//Transferencia de valor
 router.post('/pix/transfer/:id', Auth.private, PixController.transferValue);
 // pagamentos boleto
 router.post('/pix/pagament/:id', Auth.private, PixController.pagamentSlip);
@@ -54,6 +54,8 @@ router.post('/pix/pagament/:id', Auth.private, PixController.pagamentSlip);
 // contratar emprestimo
 router.post('/loan/:id', Auth.private, LoanController.loanContract);
 //
-router.get('/loan/limit/:id', Auth.private,LoanController.getLimit)
+router.get('/loan/limit/:id', Auth.private,LoanController.getLimit);
+// efetuar pagamento
+router.put('loan/payment');
 
 module.exports = router;
