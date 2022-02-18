@@ -7,6 +7,7 @@ const CurrentAccountController = require('./controllers/CurrentAccountController
 const CreditCardController = require('./controllers/CreditCardController');
 const PixController = require('./controllers/PixController');
 const LoanController = require('./controllers/LoanController');
+const TransferenceController = require('./controllers/TransferenceController')
 
 //validator
 const AuthValidator = require('./validator/AuthValidator');
@@ -53,9 +54,10 @@ router.post('/pix/pagament/:id', Auth.private, PixController.pagamentSlip);
 //Loan
 // contratar emprestimo
 router.post('/loan/:id', Auth.private, LoanController.loanContract);
-//
+// exibir valor disponivel para emprestimo
 router.get('/loan/limit/:id', Auth.private,LoanController.getLimit);
-// efetuar pagamento
-router.put('loan/payment');
 
+// transference
+//fazer transferencia 
+router.post('/transference/user/:id', Auth.private,  TransferenceController.transferValue)
 module.exports = router;

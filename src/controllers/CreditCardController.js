@@ -218,58 +218,69 @@ module.exports = {
         
         if(searchInvoice){
           let descriptionInvoiceValue = await DescriptionInvoiceValue.findOne({where:{iduser:id,month,year}});
-          if(descriptionInvoiceValue){
-            descriptionInvoiceValue.situation = situation;
-            descriptionInvoiceValue.save();
+          
+          if(descriptionInvoiceValue && descriptionInvoiceValue.situation === 'Em Aberto'){
+            
+            if(situation && situation === 'Pagamento Efetuado'){
 
-            //adicionar valor fatura ao limite cartão
-            if(descriptionInvoiceValue.situation === "Pagamento Efetuado"){
-              let cardLimit = await CreditCard.findOne({where:{iduser:id}});
-              if(cardLimit){
-                let newValues = parseInt(cardLimit.limit.replace('.','').replace(',','')) + parseInt(descriptionInvoiceValue.value.replace('.','').replace(',',''));
-                cardLimit.limit = ValueFormated(newValues.toString());
-                cardLimit.save();
+              descriptionInvoiceValue.situation = situation;
+              descriptionInvoiceValue.save();
+              
+              //adicionar valor fatura ao limite cartão
+              if(descriptionInvoiceValue.situation === "Pagamento Efetuado"){
+                let cardLimit = await CreditCard.findOne({where:{iduser:id}});
+                if(cardLimit){
+                  let newValues = parseInt(cardLimit.limit.replace('.','').replace(',','')) + parseInt(descriptionInvoiceValue.value.replace('.','').replace(',',''));
+                  cardLimit.limit = ValueFormated(newValues.toString());
+                  //cardLimit.save();
+                }
               }
-            }
-            //--------------------------------------------------------
-
-            // adicionar valor do emprestimo pago ao valor total para novo emprestimo
-            for(let i in searchInvoice){
-              let loanArray = [];
-              if(searchInvoice[i].description === 'emprestimo'){
-                loanArray.push(parseInt(searchInvoice[i].installmentvalue.replace('.','').replace(',','')));
-                let sum = 0;
-                for(let i = 0; i < loanArray.length; i++){
-                  sum += loanArray[i];
-                };
-                let loan = await Loan.findOne({where:{iduser:user.id}});
-                if(loan){
-                  let loanValue = parseInt(loan.value.replace('.','').replace(',',''));
-                  loanValue += sum;
-                  loan.value = ValueFormated(loanValue.toString());
-                  await loan.save();
+              //--------------------------------------------------------
+              // adicionar valor do emprestimo pago ao valor total para novo emprestimo
+              for(let i in searchInvoice){
+                let loanArray = [];
+                if(searchInvoice[i].description === 'emprestimo'){
+                  loanArray.push(parseInt(searchInvoice[i].installmentvalue.replace('.','').replace(',','')));
+                  let sum = 0;
+                  for(let i = 0; i < loanArray.length; i++){
+                    sum += loanArray[i];
+                  };
+                  let loan = await Loan.findOne({where:{iduser:user.id}});
+                  if(loan){
+                    let loanValue = parseInt(loan.value.replace('.','').replace(',',''));
+                    loanValue += sum;
+                    loan.value = ValueFormated(loanValue.toString());
+                    await loan.save();
+                  };
                 };
               };
+  
+              res.status(201);
+              res.json('Pagamento Efetuado');
+              //--------------------------------------------------------------------------------
+            }else{
+              res.status(200);
+              res.json({error:'Pagamento não efetuado...'})
             };
 
-            //--------------------------------------------------------------------------------
-          }
-          res.status(201);
-          res.json('Pagamento Efetuado');
+          }else{
+            res.status(200);
+            res.json({error:'Pagamento já foi efetuado.'});
+          };
 
         }else{
           res.status(200);
           res.json({error:'Não há lançamentos...'});
-        }
+        };
       }else{
         res.status(200);
         res.json({error:"Usuario não encontrado..."});
-      }
+      };
 
     }catch(error){
       res.status(404);
       res.json({error:'Ocorreu um erro tente mais tarde...'});
-    }
+    };
 
   }
 }
