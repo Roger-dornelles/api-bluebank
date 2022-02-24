@@ -42,7 +42,7 @@ const Transference = sequelize.define('Transference',{
 
 },{
     tableName:'transference',
-    timestamp:false
+    timestamps:false
 });
 
 module.exports = Transference;
