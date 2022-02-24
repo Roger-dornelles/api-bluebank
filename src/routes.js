@@ -7,7 +7,8 @@ const CurrentAccountController = require('./controllers/CurrentAccountController
 const CreditCardController = require('./controllers/CreditCardController');
 const PixController = require('./controllers/PixController');
 const LoanController = require('./controllers/LoanController');
-const TransferenceController = require('./controllers/TransferenceController')
+const TransferenceController = require('./controllers/TransferenceController');
+const DonationController = require('./controllers/DonationController')
 
 //validator
 const AuthValidator = require('./validator/AuthValidator');
@@ -59,5 +60,9 @@ router.get('/loan/limit/:id', Auth.private,LoanController.getLimit);
 
 // transference
 //fazer transferencia 
-router.post('/transference/user/:id', Auth.private,  TransferenceController.transferValue)
+router.post('/transference/user/:id', Auth.private,  TransferenceController.transferValue);
+
+// Donation
+// fazer doação
+router.post('/user/donation/:id', Auth.private, DonationController.donation)
 module.exports = router;
