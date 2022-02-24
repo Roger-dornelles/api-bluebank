@@ -61,7 +61,6 @@ module.exports = {
                 res.json({error:"Usuario não encontrado"});
             }
         }catch(error){
-            console.log('ERROR => ',error)
             res.status(404);
             res.json({ error:'Ocorreu um erro tente mais tarde...'})
 
