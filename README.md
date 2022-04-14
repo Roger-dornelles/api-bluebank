@@ -3,7 +3,11 @@ Api-bluebank
 
 EM DESENVOLVIMENTO 🚨🚨🚨
 
-Tecnologias usadas:
+### Instalação:
+
+✅No prompt de comando (cmd) digitar o comando :point_right: `git clone `
+
+### Tecnologias usadas:
 
 ✔ Node.js, express, express-validator, Jwt, Sequelize e banco de dados postgres
 
