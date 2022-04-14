@@ -11,7 +11,7 @@ EM DESENVOLVIMENTO 🚨🚨🚨
 
 ✅ Após estar dentro da pasta do projeto executar as instalação das dependencias do projeto executando o comado ` npm install `
 
-✅ Após a instalação das dependencias para executar o projeto no prompt de comando executar o comando :point_right: ` npm run startdev`
+✅ Após a instalação das dependencias para executar o projeto no prompt de comando executar o comando :point_right: ` npm startdev`
 
 
 ### Tecnologias usadas:
