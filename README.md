@@ -3,7 +3,18 @@ Api-bluebank
 
 EM DESENVOLVIMENTO 🚨🚨🚨
 
-Tecnologias usadas:
+### Instalação:
+
+✅No prompt de comando (cmd) digitar o comando :point_right: `git clone https://github.com/Roger-dornelles/api-bluebank ` para executar um clone do projeto.
+
+✅ No prompt de comando navegar para dentro da pasta criada com o nome do projeto executando :point_right: cd (nome da pasta criada)
+
+✅ Após estar dentro da pasta do projeto executar as instalação das dependencias do projeto executando o comado ` npm install `
+
+✅ Após a instalação das dependencias para executar o projeto no prompt de comando executar o comando :point_right: ` npm run start-dev`
+
+
+### Tecnologias usadas:
 
 ✔ Node.js, express, express-validator, Jwt, Sequelize e banco de dados postgres
 
