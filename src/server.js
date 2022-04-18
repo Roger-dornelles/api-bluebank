@@ -18,6 +18,6 @@ server.use((req,res) => {
   res.json({error:'Endpoint não encontrado.'});
 });
 
-server.listen(process.env.PG_PORT ,() => {
+server.listen(process.env.PORT  ,() => {
   console.log('Funcionando em ',process.env.PG_HOST);
 });
