@@ -6,7 +6,13 @@ const sequelize = new Sequelize(
   process.env.PG_BASE_URI,
   {
     dialect:'postgres',
-    port: process.env.PG_PORT
+    port: process.env.PG_PORT,
+    dialectOptions: {
+      ssl: {
+          require: true,
+          rejectUnauthorized: false
+      }
+    }
   }
 );
 
