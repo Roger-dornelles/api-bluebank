@@ -19,5 +19,5 @@ server.use((req,res) => {
 });
 
 server.listen(process.env.PG_PORT ,() => {
-  console.log('Funcionando em ',process.env.HOST);
+  console.log('Funcionando em ',process.env.PG_HOST);
 });
