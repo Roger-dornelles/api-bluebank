@@ -24,4 +24,6 @@ const Donation = sequelize.define('Donation',{
     timestamps:false
 });
 
+Donation.sync();
+
 module.exports = Donation;

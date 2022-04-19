@@ -32,4 +32,6 @@ const DescriptionInvoiceValue = sequelize.define('DescritionInvoiceValue',{
     timestamps:false
 });
 
+DescriptionInvoiceValue.sync();
+
 module.exports = DescriptionInvoiceValue;

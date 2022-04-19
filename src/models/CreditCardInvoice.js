@@ -41,4 +41,6 @@ const CreditCardInvoice = sequelize.define('CreditCardInvoice',{
   timestamps:false
 });
 
+CreditCardInvoice.sync();
+
 module.exports = CreditCardInvoice;

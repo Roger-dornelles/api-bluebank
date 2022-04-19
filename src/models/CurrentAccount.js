@@ -19,5 +19,6 @@ const CurrentAccount = sequelize.define('CurrentAccount', {
   tableName : 'currentaccount',
   timestamps : false
 });
+CurrentAccount.sync()
 
 module.exports = CurrentAccount;

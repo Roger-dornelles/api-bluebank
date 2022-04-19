@@ -20,4 +20,6 @@ const Loan = sequelize.define('Loan',{
     timestamps:false
 });
 
+Loan.sync();
+
 module.exports = Loan;

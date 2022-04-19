@@ -40,4 +40,6 @@ const Pix = sequelize.define('Pix',{
     timestamps:false
 });
 
+Pix.sync();
+
 module.exports = Pix;

@@ -20,5 +20,6 @@ const CreditCard = sequelize.define('CreditCard',{
   timestamps:false
 }
 );
+CreditCard.sync();
 
 module.exports = CreditCard;
