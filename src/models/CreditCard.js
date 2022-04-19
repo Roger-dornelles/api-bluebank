@@ -9,10 +9,11 @@ const CreditCard = sequelize.define('CreditCard',{
   },
   limit:{
     type:DataTypes.STRING,
+    allowNull: false
   },
   iduser:{
-    allowNull: false,
-    type:DataTypes.STRING
+    type:DataTypes.STRING,
+    allowNull: false
   }
 
 },{
