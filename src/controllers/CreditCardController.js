@@ -107,7 +107,7 @@ module.exports = {
       const user = await User.findOne({where:{id}});
       if(user){
 
-        if(cardLimit.limit.replace('.','').replace(',','') >= value.replace('.','').replace(',','')){
+        if(parseInt(cardLimit.limit.replace('.','').replace(',','')) >= parseInt(value.replace('.','').replace(',',''))){
           // descontar do limite do cartao e formatar novo valor
           let newLimitFormat = parseInt(cardLimit.limit.replace('.','').replace(',',''));
           let newFormatValue = parseInt(value.replace('.','').replace(',',''));
