@@ -4,11 +4,11 @@ const { DataTypes } = require('sequelize');
 const CreditCardInvoice = sequelize.define('CreditCardInvoice',{
   id:{
     autoIncrement: true,
+    primaryKey: true,
+    allowNull: false,
     type:DataTypes.INTEGER,
   },
   iduser:{
-    primaryKey: true,
-    allowNull: false,
     type:DataTypes.INTEGER
   },
   description:{
