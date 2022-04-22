@@ -203,7 +203,8 @@ module.exports = {
     }catch(error){
       console.log(error)
       res.status(404);
-      res.json({error:'Ocorreu um erro tente mais tarde...'},error);
+      //res.json({error:'Ocorreu um erro tente mais tarde...'});
+      res.json({error:error});
     }
   },
 
