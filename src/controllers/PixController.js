@@ -88,6 +88,7 @@ module.exports = {
                             newValue = ValueFormated(currentAccountFormat.toString());
                             month = DateFormated(month);
                             if(pixdestination && description === 'boleto'){
+                                description = 'Pagamento de Boleto'
                                 value = PriceFormated(value);
                                 await Pix.create({
                                     iduser: user.id,
