@@ -138,7 +138,14 @@ module.exports = {
             let user = await User.findOne({where:{id}});
 
             if(user){
-                let pix = await Pix.findAll({where:{iduser:user.id}});
+                let pix = await Pix.findAll({where:{
+                    iduser:user.id
+                    }},{
+                        order:[
+                            ['date']
+                        ]
+                    }
+                );
                 if(pix){
                     res.status(201);
                     res.json({pix});
