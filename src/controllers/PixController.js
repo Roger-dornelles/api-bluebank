@@ -125,7 +125,7 @@ module.exports = {
     },
 
     displayPix: async (req,res) => {
-        let { id } = req.body;
+        let { id } = req.params;
         
         try{
             let user = await User.findOne({where:{id}});
