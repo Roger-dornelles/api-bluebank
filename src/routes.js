@@ -51,6 +51,8 @@ router.put('/creditCard/expenses/:id',Auth.private, CreditCardController.updateI
 router.post('/pix/transfer/:id', Auth.private, PixController.transferValue);
 // pagamentos boleto
 router.post('/pix/pagament/:id', Auth.private, PixController.pagamentSlip);
+// exibir pix 
+router.get('/pix/viewTransfers/:id', Auth.private, PixController.displayPix);
 
 //Loan
 // contratar emprestimo

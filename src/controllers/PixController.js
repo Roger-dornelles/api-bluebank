@@ -122,5 +122,32 @@ module.exports = {
             res.status(404);
             res.json({error:'Ocorreu um erro tente mais tarde...'})
         }
+    },
+
+    displayPix: async (req,res) => {
+        let { id } = req.body;
+        
+        try{
+            let user = await User.findOne({where:{id}});
+
+            if(user){
+                let pix = await Pix.findOne({where:{iduser:user.id}});
+                if(pix){
+                    res.status(201);
+                    res.json({pix});
+                }else{
+                    res.status(201);
+                    res.json('Não há lançamentos...');
+                }
+
+            }else{
+                res.status(404);
+                res.json({error:'Usuario não encontrado...'});
+            }
+
+        }catch(error){
+            res.status(404);
+            res.json({error:'Ocorreu um erro tente mais tarde...'});
+        }
     }
 }
