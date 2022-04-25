@@ -106,22 +106,28 @@ module.exports = {
                             }else{
                                 res.status(200);
                                 res.json({error:'Preencha todos os campos...'});
-                            }
-                        }
+                            };
+                        }else{
+                            res.status(200);
+                            res.json({error:'Saldo insuficiente...'});
+                        };
 
                     }else{
                         res.status(200);
                         res.json({error:'Valor invalido...'});
-                    }
-                }
+                    };
+                }else{
+                    res.status(404);
+                    res.json({error:'Conta inexistente'});
+                };
             }else{
                 res.json(200);
                 res.json({error:'Usuario não encontrado...'});
-            }
+            };
         }catch(error){
             res.status(404);
             res.json({error:'Ocorreu um erro tente mais tarde...'})
-        }
+        };
     },
 
     displayPix: async (req,res) => {
