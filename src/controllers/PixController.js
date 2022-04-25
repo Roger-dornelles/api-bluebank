@@ -30,7 +30,7 @@ module.exports = {
                         accountBalanceFormat = ValueFormated(accountBalanceFormat.toString());
 
                         if(description === "transferencia"){
-
+                            description ='Transferencia Pix';
                             await Pix.create({
                                 iduser: user.id,
                                 value,
