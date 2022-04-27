@@ -35,13 +35,12 @@ module.exports = {
   // exibir faturas
   invoices: async (req,res)=>{
     let {id} = req.params;
-    let {monthFormat,year} = FormatDate();
+    let {month,year} = req.body;
     
     try{
-      year = year.toString();
       let invoice = await CreditCardInvoice.findAll({where:{
           iduser:id,
-          month: monthFormat,
+          month,
           year
         }
       },{
@@ -93,7 +92,7 @@ module.exports = {
     }catch(error){
 
       res.status(404);
-      res.json({error});
+      res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
     
   },
