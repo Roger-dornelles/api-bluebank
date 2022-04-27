@@ -38,7 +38,6 @@ module.exports = {
     let {monthFormat,year} = FormatDate();
     
     try{
-      monthFormat = monthFormat.toString();
       year = year.toString();
       let invoice = await CreditCardInvoice.findAll({where:{
           iduser:id,
