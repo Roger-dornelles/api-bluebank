@@ -142,7 +142,7 @@ module.exports = {
                     iduser:user.id
                     }},{
                         order:[
-                            ['date']
+                            ['DESC','date']
                         ]
                     }
                 );
