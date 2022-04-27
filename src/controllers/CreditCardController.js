@@ -35,7 +35,7 @@ module.exports = {
   // exibir faturas
   invoices: async (req,res)=>{
     let {id} = req.params;
-    let {month,year} = req.body;
+    let {month,year} = FormatDate();
     
     try{
       let invoice = await CreditCardInvoice.findAll({where:{
