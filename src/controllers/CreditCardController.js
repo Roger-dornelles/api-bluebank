@@ -40,8 +40,8 @@ module.exports = {
     try{
       let invoice = await CreditCardInvoice.findAll({where:{
           iduser:id,
-          month:month.toString(),
-          year: year.toString()
+          month,
+          year
         }
       },{
       order:[
@@ -92,7 +92,7 @@ module.exports = {
     }catch(error){
 
       res.status(404);
-      res.json({error:'Ocorreu um erro tente mais tarde...'});
+      res.json({error});
     }
     
   },
