@@ -92,7 +92,7 @@ module.exports = {
     }catch(error){
 
       res.status(404);
-      res.json({error});
+      res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
     
   },
