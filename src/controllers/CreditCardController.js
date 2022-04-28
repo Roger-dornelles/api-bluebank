@@ -36,8 +36,7 @@ module.exports = {
   invoices: async (req,res)=>{
     let {id} = req.params;
     let {month,year} = req.body;
-    console.log("VIA API ",month,year);
-    
+    console.log("API ==> ",month,year);
     try{
       let invoice = await CreditCardInvoice.findAll({where:{
           iduser:id,
@@ -93,7 +92,7 @@ module.exports = {
     }catch(error){
 
       res.status(404);
-      res.json({error});
+      res.json({error:'Ocorreu um erro tente mais tarde...'});
     }
     
   },
