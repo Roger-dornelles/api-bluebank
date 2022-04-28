@@ -36,12 +36,12 @@ module.exports = {
   invoices: async (req,res)=>{
     let {id} = req.params;
     let {month,year} = req.body;
-    console.log("API ==> ",month,year);
+
     try{
       let invoice = await CreditCardInvoice.findAll({where:{
           iduser:id,
-          month,
-          year
+          month:month.toString(),
+          year: year.toString()
         }
       },{
       order:[
