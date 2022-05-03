@@ -38,56 +38,56 @@ module.exports = {
     let {month,year} = req.body;
 
     try{
-      let invoice = await CreditCardInvoice.findAll({where:{
-          iduser:id,
-          month,
-          year
-        }
-      },{
-      order:[
-        ['DESC','date',]]
-        }
-    );
+        let invoice = await CreditCardInvoice.findAll({where:{
+            iduser:id,
+            month,
+            year
+          }
+        },{
+        order:[
+          ['ASC','date',]]
+          }
+      );
 
-    if(invoice.length === 0){
-      res.status(200);
-      res.json({error:'Não há lançamentos...'});
-    }else{
-      let invoiceValue = 0;
-      if(invoice.length >= 1){
-        //formatar valores, exibir valor total gasto no mes
-        let invoiceArray = [];
-        for(let i in invoice){
-          let arrayValues = parseFloat(invoice[i].installmentvalue.replace('.','').replace(',',''))
-          invoiceArray.push(arrayValues);
+      if(invoice.length === 0){
+        res.status(200);
+        res.json({error:'Não há lançamentos...'});
+      }else{
+        let invoiceValue = 0;
+        if(invoice.length >= 1){
+          //formatar valores, exibir valor total gasto no mes
+          let invoiceArray = [];
+          for(let i in invoice){
+            let arrayValues = parseFloat(invoice[i].installmentvalue.replace('.','').replace(',',''))
+            invoiceArray.push(arrayValues);
+          }
+          
+          let newTotal = invoiceArray.reduce(function(value, item){
+            return value + item;
+          });
+          invoiceValue = ValueFormated(newTotal.toString());
+        }
+        //-------------------------------------------------------------
+        //criar fatura do mes se não existir com valor total da fatura
+        let descriptionInvoiceValue = await DescriptionInvoiceValue.findOne({where:{iduser:id,month,year}});
+        if(!descriptionInvoiceValue){
+
+          await DescriptionInvoiceValue.create({
+            iduser:id,
+            month: month,
+            year: year,
+            situation: 'Em Aberto',
+            value:invoiceValue
+          })
+        }else{
+          let descriptionInvoice = await DescriptionInvoiceValue.findOne({where:{iduser:id,month,year}});
+          descriptionInvoice.value = invoiceValue;
+          descriptionInvoice.save();
         }
         
-        let newTotal = invoiceArray.reduce(function(value, item){
-          return value + item;
-        });
-        invoiceValue = ValueFormated(newTotal.toString());
+          res.status(201);
+          res.json({invoice,invoiceValue});
       }
-      //-------------------------------------------------------------
-      //criar fatura do mes se não existir com valor total da fatura
-      let descriptionInvoiceValue = await DescriptionInvoiceValue.findOne({where:{iduser:id,month,year}});
-      if(!descriptionInvoiceValue){
-
-        await DescriptionInvoiceValue.create({
-          iduser:id,
-          month: month,
-          year: year,
-          situation: 'Em Aberto',
-          value:invoiceValue
-        })
-      }else{
-        let descriptionInvoice = await DescriptionInvoiceValue.findOne({where:{iduser:id,month,year}});
-        descriptionInvoice.value = invoiceValue;
-        descriptionInvoice.save();
-      }
-      
-        res.status(201);
-        res.json({invoice,invoiceValue});
-    }
 
     }catch(error){
 
