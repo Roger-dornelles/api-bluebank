@@ -45,7 +45,7 @@ module.exports = {
           }
         },{
         order:[
-          ['ASC','date',]]
+          ['ASC','date']]
           }
       );
 

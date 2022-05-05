@@ -65,7 +65,8 @@ module.exports = {
                     }else if(document.length === 14){
                         data.document = mask(document,['99.999.999/9999-99']);
                     }else{
-                        res.status(200);res.json({error:'Digitos Invalidos'});
+                        res.status(200);
+                        res.json({error:'Digitos Invalidos'});
                     };
 
                     if(type_destiny_account === 'poupança'){

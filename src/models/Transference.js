@@ -45,4 +45,6 @@ const Transference = sequelize.define('Transference',{
     timestamps:false
 });
 
+Transference.sync();
+
 module.exports = Transference;

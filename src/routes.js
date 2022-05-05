@@ -66,5 +66,6 @@ router.post('/transference/user/:id', Auth.private,  TransferenceController.tran
 
 // Donation
 // fazer doação
-router.post('/user/donation/:id', Auth.private, DonationController.donation)
+router.post('/user/donation/:id', Auth.private, DonationController.donation);
+
 module.exports = router;
