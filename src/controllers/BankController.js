@@ -7,8 +7,11 @@ module.exports = {
         try{
             let bank = await Bank.findAll();
             if(bank) {
-                res.status(201);
-                res.json([ bank ]);
+                for(let i in bank) {
+
+                    res.status(201);
+                    res.json( bank[i] );
+                }
             }else{
                 res.status(201);
                 res.json({ error:'Não há bancos cadastrados' });
