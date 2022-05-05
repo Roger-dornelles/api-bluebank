@@ -5,7 +5,7 @@ module.exports = {
     banks: async (req,res) => {
 
         try{
-            let bank = await Bank.find();
+            let bank = await Bank.findAll();
             if(bank) {
                 res.status(201);
                 res.json({ bank });
