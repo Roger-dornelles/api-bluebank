@@ -8,7 +8,8 @@ const CreditCardController = require('./controllers/CreditCardController');
 const PixController = require('./controllers/PixController');
 const LoanController = require('./controllers/LoanController');
 const TransferenceController = require('./controllers/TransferenceController');
-const DonationController = require('./controllers/DonationController')
+const DonationController = require('./controllers/DonationController');
+const BankController = require('./controllers/BankController');
 
 //validator
 const AuthValidator = require('./validator/AuthValidator');
@@ -67,5 +68,8 @@ router.post('/transference/user/:id', Auth.private,  TransferenceController.tran
 // Donation
 // fazer doação
 router.post('/user/donation/:id', Auth.private, DonationController.donation);
+
+// exibir bancos
+router.get('/bank', Auth.private,BankController.banks);
 
 module.exports = router;
