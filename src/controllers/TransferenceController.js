@@ -102,7 +102,7 @@ module.exports = {
                     let valueAccount = parseInt(userAccount.initialvalue.replace('.','').replace(',',''));
                     let newValueFormated = parseInt(value.replace('.','').replace(',',''));
                     //verificar se saldo em conta é maior que valor de transferencia/ salvar transferencia
-                    if(newValueFormated <= valueAccount){
+                    if(valueAccount >= newValueFormated){
                         await Transference.create({
                             iduser:user.id,
                             value: data.value, 
