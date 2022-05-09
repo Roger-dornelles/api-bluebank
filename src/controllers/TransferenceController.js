@@ -24,12 +24,6 @@ module.exports = {
                 if(value && account && bank && type_destiny_account && agency && favored_name && document){
                     let data = {};
 
-                    if(value !== ''){
-                        value = value.replace('.','').replace(',','');
-                        value = ValueFormated(value.toString());
-                        data.value = value;
-                    };
-
                     if(account){
                         let newFormatAccount = account.replace('-','');
 
@@ -48,7 +42,6 @@ module.exports = {
                         }else if(newFormatAccount.length === 12){
                             data.account = mask(newFormatAccount,['99999999999-9']);
                         };
-
 
                     }else{
                         res.status(200);
@@ -97,12 +90,20 @@ module.exports = {
                         res.status(200);
                         res.json({error:'Tipo de conta invalido...'});
                     };
+
+                    if(value){
+                        value = value.replace('.','').replace(',','');
+                        let formatValue = ValueFormated(value.toString());
+                        data.value = formatValue;
+                    };
+
                     // verificar se existe conta corrente / remover caracteres dos valores
                     let userAccount = await CurrentAccount.findOne({where:{iduser:user.id}});
                     let valueAccount = parseInt(userAccount.initialvalue.replace('.','').replace(',',''));
                     let newValueFormated = parseInt(value.replace('.','').replace(',',''));
+
                     //verificar se saldo em conta é maior que valor de transferencia/ salvar transferencia
-                    if(valueAccount >= newValueFormated){
+                    if(parseInt(valueAccount) >= parseInt(newValueFormated)){
                         await Transference.create({
                             iduser:user.id,
                             value: data.value, 
