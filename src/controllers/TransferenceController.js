@@ -60,8 +60,8 @@ module.exports = {
                     };
 
                     if(agency){
-                        let newFomatAgency = agency.replace('.','');
-                        
+                        let newFomatAgency = agency.replace('-','');
+
                         if(newFomatAgency.length === 3){
                             data.agency = mask(agency, ['999']);
 
