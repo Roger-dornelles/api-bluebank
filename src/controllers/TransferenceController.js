@@ -30,8 +30,26 @@ module.exports = {
                         data.value = value;
                     };
 
-                    if(account.length === 9){
-                        data.account = mask(account,['99999999-9']);
+                    if(account){
+                        account = account.replace('-','');
+                        switch(account){
+                            case account.length === 5:
+                                data.account = mask(account,['9999-9']);
+                            break;
+                            case account.length === 7:
+                                data.account = mask(account,['999999-9']);
+                            break;
+                            case account.length === 8:
+                                data.account = mask(account,['9999999-9']);
+                            break;
+                            case account.length === 9:
+                                data.account = mask(account,['99999999-9']);
+                            break;
+                            case account.length === 12:
+                                data.account = mask(account,['99999999999-9']);
+                            break;
+                        }
+
                     }else{
                         res.status(200);
                         res.json({error:'Conta Invalida.'});
