@@ -33,7 +33,7 @@ module.exports = {
                     if(account){
                         account = account.replace('-','');
                         switch(account){
-                            case account.length === 5:
+                            case account.length === 6:
                                 return data.account = mask(account,['9999-9']);
                             break;
                             case account.length === 7:
@@ -73,7 +73,7 @@ module.exports = {
                                 return data.agency = mask(agency, ['9999-9']);
                             break;
                         }
-                        return
+                        
                     }else{
                         res.status(200);
                         res.json({error:'Agencia Invalida.'});
