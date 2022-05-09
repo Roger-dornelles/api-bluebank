@@ -32,22 +32,10 @@ module.exports = {
 
                     if(account){
                         let newFormatAccount = account.replace('-','');
-                        switch(newFormatAccount){
-                            case newFormatAccount.length === 5:
-                                return data.account = mask(newFormatAccount,['9999-9']);
-                            break;
-                            case newFormatAccount.length === 7:
-                                return data.account = mask(newFormatAccount,['999999-9']);
-                            break;
-                            case newFormatAccount.length === 8:
-                                return data.account = mask(newFormatAccount,['9999999-9']);
-                            break;
-                            case newFormatAccount.length === 9:
-                                return data.account = mask(newFormatAccount,['99999999-9']);
-                            break;
-                            case newFormatAccount.length === 12:
-                                return data.account = mask(newFormatAccount,['99999999999-9']);
-                            break;
+
+                        if( newFormatAccount.length === 5){
+
+                            return data.account = mask(newFormatAccount,['9999-9']);
                         }
 
                     }else{
