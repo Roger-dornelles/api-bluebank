@@ -35,7 +35,7 @@ module.exports = {
 
                         if( newFormatAccount.length === 5){
 
-                            return data.account = mask(newFormatAccount,['9999-9']);
+                            data.account = mask(newFormatAccount,['9999-9']);
                         }
 
                     }else{
