@@ -31,21 +31,20 @@ module.exports = {
                     };
 
                     if(account){
-                        account = account.replace('-','');
                         switch(account){
                             case account.length === 6:
                                 return data.account = mask(account,['9999-9']);
                             break;
-                            case account.length === 7:
+                            case account.length === 8:
                                 return data.account = mask(account,['999999-9']);
                             break;
-                            case account.length === 8:
+                            case account.length === 9:
                                 return data.account = mask(account,['9999999-9']);
                             break;
-                            case account.length === 9:
+                            case account.length === 10:
                                 return data.account = mask(account,['99999999-9']);
                             break;
-                            case account.length === 12:
+                            case account.length === 13:
                                 return data.account = mask(account,['99999999999-9']);
                             break;
                         }
@@ -60,7 +59,6 @@ module.exports = {
                     };
 
                     if(agency){
-                        agency = agency.replace('-','');
 
                         switch(agency){
                             case agency.length === 3:
@@ -69,7 +67,7 @@ module.exports = {
                             case agency.length === 4:
                                 return data.agency = mask(agency,['9999']);
                             break;
-                            case account.length === 5:
+                            case account.length === 6:
                                 return data.agency = mask(agency, ['9999-9']);
                             break;
                         }
