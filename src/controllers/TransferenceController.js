@@ -49,7 +49,7 @@ module.exports = {
                                 data.account = mask(account,['99999999999-9']);
                             break;
                         }
-
+                        return data.account;
                     }else{
                         res.status(200);
                         res.json({error:'Conta Invalida.'});
@@ -58,8 +58,6 @@ module.exports = {
                     if(bank){
                         data.bank = bank;
                     };
-
-                    ['999','9999','9999-9']
 
                     if(agency){
                         agency = agency.replace('-','');
@@ -75,7 +73,7 @@ module.exports = {
                                 data.agency = mask(agency, ['9999-9']);
                             break;
                         }
-                    
+                        return data.agency;
                     }else{
                         res.status(200);
                         res.json({error:'Agencia Invalida.'});
@@ -85,10 +83,9 @@ module.exports = {
                         data.favored_name = favored_name;
                     };
 
-                    if(document.length === 11){
+                    if(document){
+                        document = document.replace('.','').replace('-','');
                         data.document = mask(document,['999.999.999-99']);
-                    }else if(document.length === 14){
-                        data.document = mask(document,['99.999.999/9999-99']);
                     }else{
                         res.status(200);
                         res.json({error:'Digitos Invalidos'});
