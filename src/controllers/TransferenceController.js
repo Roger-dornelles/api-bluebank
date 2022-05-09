@@ -100,9 +100,9 @@ module.exports = {
                     // verificar se existe conta corrente / remover caracteres dos valores
                     let userAccount = await CurrentAccount.findOne({where:{iduser:user.id}});
                     let valueAccount = parseInt(userAccount.initialvalue.replace('.','').replace(',',''));
-                    value = parseInt(value.replace('.','').replace(',',''));
+                    let newValueFormated = parseInt(value.replace('.','').replace(',',''));
                     //verificar se saldo em conta é maior que valor de transferencia/ salvar transferencia
-                    if(value <= valueAccount){
+                    if(newValueFormated <= valueAccount){
                         await Transference.create({
                             iduser:user.id,
                             value: data.value, 
@@ -114,7 +114,7 @@ module.exports = {
                             document: data.document
                         });
                         // salvar novo valor em conta corrente
-                        let newAccountValue = (valueAccount - value).toString();
+                        let newAccountValue = (valueAccount - newValueFormated).toString();
                         userAccount.initialvalue = ValueFormated(newAccountValue.toString());
                         await userAccount.save();
                         res.status(201);
