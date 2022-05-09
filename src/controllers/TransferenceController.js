@@ -31,21 +31,22 @@ module.exports = {
                     };
 
                     if(account){
-                        switch(account){
-                            case account.length === 6:
-                                return data.account = mask(account,['9999-9']);
+                        let newFormatAccount = account.replace('-','');
+                        switch(newFormatAccount){
+                            case newFormatAccount.length === 5:
+                                return data.account = mask(newFormatAccount,['9999-9']);
                             break;
-                            case account.length === 8:
-                                return data.account = mask(account,['999999-9']);
+                            case newFormatAccount.length === 7:
+                                return data.account = mask(newFormatAccount,['999999-9']);
                             break;
-                            case account.length === 9:
-                                return data.account = mask(account,['9999999-9']);
+                            case newFormatAccount.length === 8:
+                                return data.account = mask(newFormatAccount,['9999999-9']);
                             break;
-                            case account.length === 10:
-                                return data.account = mask(account,['99999999-9']);
+                            case newFormatAccount.length === 9:
+                                return data.account = mask(newFormatAccount,['99999999-9']);
                             break;
-                            case account.length === 13:
-                                return data.account = mask(account,['99999999999-9']);
+                            case newFormatAccount.length === 12:
+                                return data.account = mask(newFormatAccount,['99999999999-9']);
                             break;
                         }
 
