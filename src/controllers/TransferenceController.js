@@ -59,16 +59,23 @@ module.exports = {
                         data.bank = bank;
                     };
 
-                    if(agency.length === 5){
-                        data.agency = mask(agency, ['9999-9']);
-                    }else if(agency.length === 4){
-                        data.agency = mask(agency,['0999-9']);
-                    }else if(agency.length === 3){
-                        data.agency = mask(agency,['0099-9']);
-                    }else if(agency.length === 2){
-                        data.agency = mask(agency,['0009-9']);
-                    }else if(agency.length === 1){
-                        data.agency = mask(agency,['0000-9']);
+                    ['999','9999','9999-9']
+
+                    if(agency){
+                        agency = agency.replace('-','');
+
+                        switch(agency){
+                            case agency.length === 3:
+                                data.agency = mask(agency, ['999']);
+                            break;
+                            case agency.length === 4:
+                                data.agency = mask(agency,['9999']);
+                            break;
+                            case account.length === 5:
+                                data.agency = mask(agency, ['9999-9']);
+                            break;
+                        }
+                    
                     }else{
                         res.status(200);
                         res.json({error:'Agencia Invalida.'});
@@ -133,7 +140,7 @@ module.exports = {
             }
         }catch(error) {
             res.status(404);
-            res.json({error:"Ocorreu um erro tente novamente mais tarde..."});
+            res.json({error});
         };
     }
 }
