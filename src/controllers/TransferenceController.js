@@ -68,7 +68,7 @@ module.exports = {
                         }else if(newFomatAgency === 4){
                             data.agency = mask(newFomatAgency,['9999']);
 
-                        }else if(newFomatAgency === 6){
+                        }else if(newFomatAgency === 5){
                             data.agency = mask(newFomatAgency, ['9999-9']);
                         };
                         
