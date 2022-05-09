@@ -34,9 +34,21 @@ module.exports = {
                         let newFormatAccount = account.replace('-','');
 
                         if( newFormatAccount.length === 5){
-
                             data.account = mask(newFormatAccount,['9999-9']);
-                        }
+
+                        }else if( newFormatAccount.length === 7){
+                            data.account = mask(newFormatAccount,['999999-9']);
+
+                        }else if( newFormatAccount.length === 8){
+                            data.account = mask(newFormatAccount,['999999-9']);
+
+                        }else if( newFormatAccount.length === 9){
+                            data.account = mask(newFormatAccount,['99999999-9']);
+                            
+                        }else if(newFormatAccount.length === 12){
+                            data.account = mask(newFormatAccount,['99999999999-9']);
+                        };
+
 
                     }else{
                         res.status(200);
