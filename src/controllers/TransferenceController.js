@@ -63,13 +63,13 @@ module.exports = {
                         let newFomatAgency = agency.replace('-','');
 
                         if(newFomatAgency.length === 3){
-                            data.agency = mask(agency, ['999']);
+                            data.agency = mask(newFomatAgency, ['999']);
 
                         }else if(newFomatAgency === 4){
-                            data.agency = mask(agency,['9999']);
+                            data.agency = mask(newFomatAgency,['9999']);
 
                         }else if(newFomatAgency === 6){
-                            data.agency = mask(agency, ['9999-9']);
+                            data.agency = mask(newFomatAgency, ['9999-9']);
                         };
                         
                     }else{
