@@ -34,22 +34,22 @@ module.exports = {
                         account = account.replace('-','');
                         switch(account){
                             case account.length === 5:
-                                data.account = mask(account,['9999-9']);
+                                return data.account = mask(account,['9999-9']);
                             break;
                             case account.length === 7:
-                                data.account = mask(account,['999999-9']);
+                                return data.account = mask(account,['999999-9']);
                             break;
                             case account.length === 8:
-                                data.account = mask(account,['9999999-9']);
+                                return data.account = mask(account,['9999999-9']);
                             break;
                             case account.length === 9:
-                                data.account = mask(account,['99999999-9']);
+                                return data.account = mask(account,['99999999-9']);
                             break;
                             case account.length === 12:
-                                data.account = mask(account,['99999999999-9']);
+                                return data.account = mask(account,['99999999999-9']);
                             break;
                         }
-                        return data.account;
+
                     }else{
                         res.status(200);
                         res.json({error:'Conta Invalida.'});
@@ -64,16 +64,16 @@ module.exports = {
 
                         switch(agency){
                             case agency.length === 3:
-                                data.agency = mask(agency, ['999']);
+                                return data.agency = mask(agency, ['999']);
                             break;
                             case agency.length === 4:
-                                data.agency = mask(agency,['9999']);
+                                return data.agency = mask(agency,['9999']);
                             break;
                             case account.length === 5:
-                                data.agency = mask(agency, ['9999-9']);
+                                return data.agency = mask(agency, ['9999-9']);
                             break;
                         }
-                        return data.agency;
+                        return
                     }else{
                         res.status(200);
                         res.json({error:'Agencia Invalida.'});
