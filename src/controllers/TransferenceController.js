@@ -44,7 +44,7 @@ module.exports = {
 
                         }else if( newFormatAccount.length === 9){
                             data.account = mask(newFormatAccount,['99999999-9']);
-                            
+
                         }else if(newFormatAccount.length === 12){
                             data.account = mask(newFormatAccount,['99999999999-9']);
                         };
@@ -60,18 +60,17 @@ module.exports = {
                     };
 
                     if(agency){
+                        let newFomatAgency = agency.replace('.','');
+                        
+                        if(newFomatAgency.length === 3){
+                            data.agency = mask(agency, ['999']);
 
-                        switch(agency){
-                            case agency.length === 3:
-                                return data.agency = mask(agency, ['999']);
-                            break;
-                            case agency.length === 4:
-                                return data.agency = mask(agency,['9999']);
-                            break;
-                            case account.length === 6:
-                                return data.agency = mask(agency, ['9999-9']);
-                            break;
-                        }
+                        }else if(newFomatAgency === 4){
+                            data.agency = mask(agency,['9999']);
+
+                        }else if(newFomatAgency === 6){
+                            data.agency = mask(agency, ['9999-9']);
+                        };
                         
                     }else{
                         res.status(200);
