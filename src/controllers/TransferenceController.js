@@ -15,11 +15,11 @@ module.exports = {
     // fazer transferencia
     transferValue: async (req,res)=>{
         let { id } = req.params;
+        let { value, account, bank, type_destiny_account, agency, favored_name, document} = req.body;
 
         try {
             let user = await User.findOne({where:{id}});
             if(user){
-                let { value, account, bank, type_destiny_account, agency, favored_name, document} = req.body;
 
                 if(value && account && bank && type_destiny_account && agency && favored_name && document){
                     let data = {};
@@ -127,7 +127,7 @@ module.exports = {
 
                 }else{
                     res.status(200);
-                    res.json({error:'Preencha todos os campos...'});
+                    res.json({value, account, bank, type_destiny_account, agency, favored_name, document});
                 };
 
             }else{
