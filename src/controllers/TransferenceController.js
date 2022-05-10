@@ -92,8 +92,8 @@ module.exports = {
                     };
 
                     if(value){
-                        value = value.replace('.','').replace(',','');
-                        let formatValue = ValueFormated(value.toString());
+                        let newValue = value.replace('.','').replace(',','');
+                        let formatValue = ValueFormated(newValue.toString());
                         data.value = formatValue;
                     };
 
