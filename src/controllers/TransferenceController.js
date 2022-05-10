@@ -15,7 +15,7 @@ module.exports = {
     // fazer transferencia
     transferValue: async (req,res)=>{
         let { id } = req.params;
-        let { value, account, bank, type_destiny_account, agency, favored_name, document} = req.body;
+        let { value, account, bank, type_destiny_account, agency, favored_name, document } = req.body;
 
         try {
             let user = await User.findOne({where:{id}});
@@ -122,12 +122,12 @@ module.exports = {
                         res.json('Tranferencia realizada...');
                     }else{
                         res.status(200);
-                        res.json({newValueFormated , valueAccount});
+                        res.json({error: 'Saldo Insuficiente.'});
                     }
 
                 }else{
                     res.status(200);
-                    res.json({error:'Preencha todos os campos...'});
+                    res.json({error:value, account, bank, type_destiny_account, agency, favored_name, document});
                 };
 
             }else{
@@ -136,7 +136,7 @@ module.exports = {
             }
         }catch(error) {
             res.status(404);
-            res.json({error});
+            res.json({error:'Ocorreu um erro tente mais tarde.'});
         };
     }
 }
