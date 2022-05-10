@@ -115,7 +115,7 @@ module.exports = {
                             document: data.document
                         });
                         // salvar novo valor em conta corrente
-                        let newAccountValue = (newValueFormated - valueAccount).toString();
+                        let newAccountValue = (valueAccount - newValueFormated ).toString();
                         userAccount.initialvalue = ValueFormated(newAccountValue.toString());
                         await userAccount.save();
                         res.status(201);
