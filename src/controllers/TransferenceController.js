@@ -119,7 +119,7 @@ module.exports = {
                         userAccount.initialvalue = ValueFormated(newAccountValue.toString());
                         await userAccount.save();
                         res.status(201);
-                        res.json('Tranferencia realizada...');
+                        res.json({newValueFormated, valueAccount});
                     }else{
                         res.status(200);
                         res.json({error:'Saldo Insuficiente...'});
