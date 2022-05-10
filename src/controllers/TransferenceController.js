@@ -21,8 +21,8 @@ module.exports = {
             let user = await User.findOne({where:{id}});
             if(user){
 
+                let data = {};
                 if(value && account && bank && type_destiny_account && agency && favored_name && document){
-                    let data = {};
 
                     if(account){
                         let newFormatAccount = account.replace('-','');
@@ -127,7 +127,7 @@ module.exports = {
 
                 }else{
                     res.status(200);
-                    res.json(value, account, bank, type_destiny_account, agency, favored_name, document);
+                    res.json({error:'Preencha todos os campos...'});
                 };
 
             }else{
