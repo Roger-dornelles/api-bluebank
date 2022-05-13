@@ -141,7 +141,7 @@ module.exports = {
         };
     },
     // exibir tranferencias
-    viewTransfers: async ()=>{
+    viewTransfers: async (req,res)=>{
 
         let { id } = req.params;
         try{
@@ -156,7 +156,7 @@ module.exports = {
                     res.status(201);
                     res.json({error:'Não há transferencias.'});
                 }
-                
+
             }else{
                 res.status(200);
                 res.json({error:'Usuario não encontrado...'});
