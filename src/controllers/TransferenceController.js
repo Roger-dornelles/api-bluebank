@@ -10,6 +10,7 @@ const ValueFormated = require('../helpers/ValueFormated');
 
 // Remask ( formatação )
 const { mask } = require('remask');
+const res = require('express/lib/response');
 
 module.exports = {
     // fazer transferencia
@@ -138,5 +139,31 @@ module.exports = {
             res.status(404);
             res.json({error:'Ocorreu um erro tente mais tarde.'});
         };
+    },
+    // exibir tranferencias
+    viewTransfers: async ()=>{
+
+        let { id } = req.params;
+        try{
+            let user = await User.findOne({where: {id}});
+
+            if(user){
+                let transfers = await Transference.findAll({where:{iduser:user.id}});
+                if(transfers){
+                    res.status(201);
+                    res.json({transfers});
+                }else{
+                    res.status(201);
+                    res.json({error:'Não há transferencias.'});
+                }
+            }else{
+                res.status(200);
+                res.json({error:'Usuario não encontrado...'});
+            }
+
+        }catch(error){
+            res.status(404);
+            res.json({error:'Ocorreu um erro tente mais tarde.'});
+        }
     }
 }

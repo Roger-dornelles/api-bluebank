@@ -64,6 +64,8 @@ router.get('/loan/limit/:id', Auth.private,LoanController.getLimit);
 // transference
 //fazer transferencia 
 router.post('/transference/user/:id', Auth.private,  TransferenceController.transferValue);
+// exibir transferencias
+router.get('/transference/user/:id', Auth.private, TransferenceController.viewTransfers);
 
 // Donation
 // fazer doação
